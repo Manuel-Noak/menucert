@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { toast } from "react-toastify";
@@ -96,7 +96,7 @@ const LoadingSkeleton = () => (
 const stripHtmlTags = (html: string): string =>
   html.replace(/<[^>]*>/g, "").trim();
 
-export default function AiProgramDetailsSection() {
+function ProgramSection() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -357,5 +357,13 @@ export default function AiProgramDetailsSection() {
         </div>
       )}
     </section>
+  );
+}
+
+export default function AiProgramDetailsSection() {
+  return (
+    <Suspense fallback={<LoadingSkeleton />}>
+      <ProgramSection />
+    </Suspense>
   );
 }
