@@ -1,0 +1,129 @@
+.heroContent {
+  max-width: 90%;
+  text-align: left;
+  margin: clamp(2rem, 6vw, 4rem) auto 0;
+  padding: 0 clamp(0.75rem, 3vw, 2rem);
+}
+
+/* Main Title */
+.heroTitleMain {
+  font-weight: 700;
+  font-size: clamp(1.75rem, 4vw, 3.125rem); /* ~28px → 50px */
+  line-height: 1.1;
+  max-width: 38rem; /* ~607px */
+  margin-bottom: 1.25rem;
+  transform-origin: left center;
+}
+
+/* Italic Title */
+.heroTitleItalic {
+  font-family: "Monotype Corsiva", "URW Chancery L", "Apple Chancery", cursive;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(2rem, 4.5vw, 3.4rem); /* ~32px → 55px */
+  line-height: 1.1;
+  display: inline-block;
+  transform-origin: left center;
+}
+
+/* Subtitle */
+.heroSubtitle {
+  font-weight: 900;
+  font-size: clamp(1rem, 1.8vw, 1.25rem); /* ~16px → 20px */
+  line-height: 1.3;
+  max-width: 38rem;
+  margin-bottom: clamp(1rem, 3vw, 1.875rem); /* 16px → 30px */
+  transform-origin: left center;
+}
+
+/* Button */
+.heroButton {
+  padding: 0.9rem 2rem;
+  border-radius: 50px;
+  min-width: 10rem; /* ~160px */
+  max-width: 16rem; /* ~260px */
+  height: auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transform-origin: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.heroButton:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px) scale(1.05);
+}
+
+.heroButton:active {
+  transform: translateY(0) scale(1.02);
+}
+
+.buttonText {
+  font-weight: 600;
+  font-size: clamp(0.8rem, 1vw, 0.95rem); /* ~13px → 15px */
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* Keyframe animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation helpers */
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.8s ease-out forwards;
+}
+
+/* Minimal responsive tweaks */
+@media (max-width: 768px) {
+  .heroContent {
+    text-align: center;
+    align-items: center;
+  }
+
+  .heroTitleMain,
+  .heroTitleItalic,
+  .heroSubtitle {
+    text-align: center;
+    transform-origin: center;
+    max-width: 100%;
+  }
+}
+
+/* Reduce motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .heroTitleMain,
+  .heroTitleItalic,
+  .heroSubtitle,
+  .heroButton {
+    transition: none;
+    animation: none;
+  }
+
+  .heroButton:hover {
+    transform: none;
+  }
+}

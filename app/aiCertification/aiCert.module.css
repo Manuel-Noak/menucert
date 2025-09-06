@@ -1,0 +1,158 @@
+/* Grid layout for courses */
+.courses {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+}
+
+/* Course card */
+.programs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.programs:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+/* Course image */
+.courses img {
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
+  display: block;
+}
+
+/* Course content (title, description, etc.) */
+.programs .content {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Buttons */
+.courses button {
+  margin-right: 5px;
+  margin-left: 5px;
+  padding: 0.75rem 1.5rem;
+  color: #ffbb15;
+  background: transparent;
+  border: 2px solid #ffbb15;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+
+.courses button:hover {
+  background: #ffbb15;
+  color: #fff;
+}
+/* Footer container */
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2.5rem 2rem;
+  background: #faffef;
+  border-top: 1px solid #e0e0e0;
+  font-family: "Montserrat", sans-serif;
+}
+
+/* Logo */
+.footer img {
+  width: 140px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Footer links container */
+.footerLinks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+/* Headings */
+.footerLinks h3 {
+  color: #ffbb15;
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+/* Links */
+.footerLinksInfo,
+.footerLinks div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footerLinks a,
+.footerLinks p {
+  color: #333;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footerLinks a:hover,
+.footerLinks p:hover {
+  color: #ffbb15;
+  cursor: pointer;
+}
+
+/* Divider */
+.footerAlright::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: #ddd;
+  margin: 1rem 0;
+}
+
+/* Copyright */
+.footerAlright {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .courses {
+    gap: 1.5rem;
+  }
+
+  .courses img {
+    height: 10rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .courses {
+    gap: 1rem;
+  }
+
+  .courses img {
+    height: 8rem;
+  }
+
+  .courses button {
+    width: 100%;
+    text-align: center;
+  }
+}

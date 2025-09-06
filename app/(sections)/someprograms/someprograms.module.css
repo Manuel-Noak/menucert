@@ -1,0 +1,222 @@
+.programsBody {
+  background: #faffef;
+  padding: clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.programsHeader {
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+.programsTitle {
+  margin: 0 0 clamp(1rem, 3vw, 1.5rem) 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.25rem, 1vw, 0.75rem);
+  line-height: 1;
+}
+
+.someText {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3vw, 2.2rem); /* ~24px → 35px */
+  color: #ffbb15;
+  border-radius: 3px;
+}
+
+.programsText {
+  font-family: "Monotype Corsiva", cursive, "Georgia", serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(2rem, 4vw, 3.125rem); /* ~32px → 50px */
+  color: #0a211f;
+}
+
+.programsSubtitle {
+  max-width: 30rem; /* ~480px */
+  font-weight: 500;
+  font-size: clamp(1rem, 1.8vw, 1.25rem); /* ~16px → 20px */
+  line-height: 1.3;
+  text-align: center;
+  color: #333;
+  margin: 0 auto;
+}
+
+.coursesGrid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(clamp(16rem, 40vw, 27rem), 1fr)
+  );
+  gap: clamp(1.25rem, 3vw, 2rem);
+  width: 100%;
+  max-width: 87.5rem; /* 1400px */
+  justify-items: center;
+}
+
+.courseCard {
+  width: 100%;
+  max-width: clamp(18rem, 45vw, 28rem); /* ~288px → 453px */
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.courseCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.courseImage {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #0001;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.courseImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.courseContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: clamp(1rem, 2vw, 1.25rem);
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.courseTitle {
+  font-weight: 600;
+  font-size: clamp(1.25rem, 2vw, 1.875rem); /* ~20px → 30px */
+  line-height: 1.2;
+  text-align: left;
+  color: #000;
+  margin: 0;
+}
+
+.seeProgramBtn {
+  border: 1px solid #ffbb15;
+  border-radius: 5px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(2rem, 6vw, 4.5rem);
+  min-width: clamp(10rem, 40%, 15rem); /* ~160px → 240px */
+}
+
+.seeProgramBtn:hover {
+  background: #ffbb15;
+}
+
+.seeProgramBtn:hover .seeProgramText {
+  color: #000;
+}
+
+.seeProgramText {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.85rem, 1vw, 0.95rem); /* ~14px → 15px */
+  line-height: 1.2;
+  color: #ffbb15;
+  transition: color 0.3s ease;
+}
+
+.noCoursesMessage {
+  text-align: center;
+  font-size: clamp(1rem, 1.5vw, 1.125rem); /* ~16px → 18px */
+  color: #666;
+  font-weight: 500;
+  margin-top: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* Skeleton loading */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeletonImage {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeletonTitle {
+  width: 80%;
+  height: clamp(1rem, 1.5vw, 1.5rem);
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.skeletonPrice {
+  width: 60%;
+  height: clamp(1rem, 1.5vw, 1.5rem);
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.skeletonButton {
+  min-width: clamp(10rem, 40%, 15rem);
+  height: clamp(2.5rem, 5vw, 3.25rem);
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 5px;
+}
+
+/* Minimal breakpoint: stack title */
+@media (max-width: 768px) {
+  .programsTitle {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .programsText {
+    margin-left: 0;
+  }
+
+  .coursesGrid {
+    grid-template-columns: 1fr;
+  }
+}
