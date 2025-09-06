@@ -6,7 +6,6 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 
 import black_back_arrow from "@/public/assets/black_back_arrow.png";
-// import program_img from "@/app/assets/img/aiCloud.jpg";
 import styles from "./aiCertProgramDetails.module.css";
 
 interface CourseDetail {
@@ -14,7 +13,7 @@ interface CourseDetail {
   acf: {
     certification_duration: string;
     about_certification: string;
-    prerequisites: string; // This is a string, not an array
+    prerequisites: string;
     certification_modules: {
       certification_module_title: string;
       certification_module_description: string;
@@ -49,74 +48,65 @@ interface CourseInfo {
   api: string;
 }
 
-// Loading Skeleton Component
-const LoadingSkeleton = () => {
-  return (
-    <section className={styles.container}>
-      {/* Header Loading Skeleton */}
-      <div className={styles.headerSection}>
-        <div className={styles.backButton}>
-          <div className={styles.skeletonBackArrow}></div>
-          <div className={styles.skeletonBackText}></div>
+// Skeleton Loader
+const LoadingSkeleton = () => (
+  <section className={styles.container}>
+    <div className={styles.headerSection}>
+      <div className={styles.backButton}>
+        <div className={styles.skeletonBackArrow}></div>
+        <div className={styles.skeletonBackText}></div>
+      </div>
+      <div className={styles.headerContent}>
+        <div className={styles.programImageContainer}>
+          <div className={styles.skeletonImage}></div>
         </div>
-
-        <div className={styles.headerContent}>
-          <div className={styles.programImageContainer}>
-            <div className={styles.skeletonImage}></div>
+        <div className={styles.programInfo}>
+          <div className={styles.skeletonTitle}></div>
+          <div className={styles.skeletonTitleSecond}></div>
+          <div className={styles.durationContainer}>
+            <div className={styles.skeletonDurationLabel}></div>
+            <div className={styles.skeletonDurationValue}></div>
           </div>
+          <div className={styles.descriptionContainer}>
+            <div className={styles.skeletonDescription}></div>
+            <div className={styles.skeletonDescriptionSecond}></div>
+            <div className={styles.skeletonDescriptionThird}></div>
+          </div>
+          <div className={styles.skeletonButton}></div>
+        </div>
+      </div>
+    </div>
 
-          <div className={styles.programInfo}>
-            <div className={styles.skeletonTitle}></div>
-            <div className={styles.skeletonTitleSecond}></div>
-
-            <div className={styles.durationContainer}>
-              <div className={styles.skeletonDurationLabel}></div>
-              <div className={styles.skeletonDurationValue}></div>
-            </div>
-
-            <div className={styles.descriptionContainer}>
-              <div className={styles.skeletonDescription}></div>
-              <div className={styles.skeletonDescriptionSecond}></div>
-              <div className={styles.skeletonDescriptionThird}></div>
-            </div>
-
-            <div className={styles.skeletonButton}></div>
+    {[1, 2, 3].map((i) => (
+      <div key={i} className={styles.section}>
+        <div className={styles.sectionContent}>
+          <div className={styles.skeletonSectionTitle}></div>
+          <div className={styles.skeletonSectionContent}>
+            {[1, 2, 3, 4].map((j) => (
+              <div key={j} className={styles.skeletonListItem}></div>
+            ))}
           </div>
         </div>
       </div>
+    ))}
+  </section>
+);
 
-      {/* Section Loading Skeletons */}
-      {[1, 2, 3].map((index) => (
-        <div key={index} className={styles.section}>
-          <div className={styles.sectionContent}>
-            <div className={styles.skeletonSectionTitle}></div>
-            <div className={styles.skeletonSectionContent}>
-              {[1, 2, 3, 4].map((item) => (
-                <div key={item} className={styles.skeletonListItem}></div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ))}
-    </section>
-  );
-};
-
-// Helper function to strip HTML tags - moved outside component
-const stripHtmlTags = (html: string): string => {
-  return html.replace(/<[^>]*>/g, "").trim();
-};
+// Strip HTML helper
+const stripHtmlTags = (html: string): string =>
+  html.replace(/<[^>]*>/g, "").trim();
 
 export default function AiProgramDetailsSection() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  const params = useSearchParams();
-  const page = params.get("id")?.toString();
-
   const [detailData, setDetailData] = useState<CourseDetail | null>(null);
-  const [courseInfo, setCourseInfo] = useState<CourseInfo>();
+  const [courseInfo, setCourseInfo] = useState<CourseInfo | null>(null);
+
+  // Extract page param safely
+  const page = searchParams?.get("id");
 
   useEffect(() => {
     if (!page) return;
@@ -127,24 +117,24 @@ export default function AiProgramDetailsSection() {
         const res = await fetch(`/api/course/${page}`);
         const data = await res.json();
 
-        setIsLoading(false);
         if (!data.success) {
-          return router.back();
+          router.back();
+          return;
         }
 
-        const { courseId, api } = data.info;
-        console.log(data.info);
-
+        const { courseId, api } = data.info as CourseInfo;
         if (!courseId || !api) {
-          return router.back();
+          router.back();
+          return;
         }
+
         setCourseInfo(data.info);
 
-        const wpRes = await fetch(api + courseId);
-        const wpData = await wpRes.json();
+        const wpRes = await fetch(`${api}${courseId}`);
+        const wpData: CourseDetail = await wpRes.json();
 
         setDetailData(wpData);
-      } catch (_) {
+      } catch {
         toast.error("Something went wrong, please check your connection");
       } finally {
         setIsLoading(false);
@@ -154,14 +144,10 @@ export default function AiProgramDetailsSection() {
     fetchData();
   }, [page, router]);
 
-  if (isLoading) {
-    return <LoadingSkeleton />;
-  }
+  // Loading state
+  if (isLoading) return <LoadingSkeleton />;
 
-  const handleBackClick = () => router.back();
-  const toggleDescription = () =>
-    setIsDescriptionExpanded(!isDescriptionExpanded);
-
+  // Fallback when data not found
   if (!detailData || !courseInfo) {
     return (
       <section className={styles.container}>
@@ -170,59 +156,48 @@ export default function AiProgramDetailsSection() {
     );
   }
 
+  const handleBackClick = () => router.back();
+  const toggleDescription = () => setIsDescriptionExpanded((prev) => !prev);
+
   const programTitle = detailData.title?.rendered ?? "No Title";
   const duration = detailData.acf?.certification_duration ?? "Not specified";
-  const rawDescription = detailData.acf?.about_certification ?? "";
-  const fullDescription = stripHtmlTags(rawDescription); // Clean HTML from description
+
+  const fullDescription = stripHtmlTags(
+    detailData.acf?.about_certification ?? ""
+  );
   const truncatedDescription =
     fullDescription.length > 200
-      ? fullDescription.substring(0, 200) + "..."
+      ? `${fullDescription.substring(0, 200)}...`
       : fullDescription;
 
-  // Process prerequisites - convert HTML string to clean text array
-  const prerequisites = detailData.acf?.prerequisites;
-  const prerequisitesArray = prerequisites
-    ? prerequisites
-        .split(/<\/li>|<li>/) // Split by li tags
-        .map((item) => stripHtmlTags(item)) // Remove all HTML tags
-        .filter((item) => item.trim() !== "") // Remove empty items
-    : [];
+  const prerequisitesArray =
+    detailData.acf?.prerequisites
+      ?.split(/<\/li>|<li>/)
+      .map(stripHtmlTags)
+      .filter((item) => item.trim() !== "") ?? [];
 
-  // Process modules - clean HTML from module descriptions
+  const modules =
+    detailData.acf?.certification_modules?.map((m) => ({
+      certification_module_title: stripHtmlTags(m.certification_module_title),
+      certification_module_description: stripHtmlTags(
+        m.certification_module_description
+      ),
+    })) ?? [];
 
-  const rawModules = detailData.acf?.certification_modules || [];
-  const modules = rawModules.map((module) => ({
-    ...module,
-    certification_module_title: stripHtmlTags(
-      module.certification_module_title || ""
-    ),
-    certification_module_description: stripHtmlTags(
-      module.certification_module_description || ""
-    ),
-  }));
   const materials =
-    detailData.acf?.fields_v5?.["self-study-materials_data"] || [];
+    detailData.acf?.fields_v5?.["self-study-materials_data"] ?? [];
+
   const learningOutcomes =
-    detailData?.acf?.what_will_you_learn?.learn_sections == undefined ||
-    !detailData?.acf?.what_will_you_learn?.learn_sections
-      ? []
-      : detailData?.acf?.what_will_you_learn?.learn_sections?.map(
-          (section) => ({
-            title: section.learn_name,
-            description: section.learn_text,
-          })
-        );
+    detailData.acf?.what_will_you_learn?.learn_sections?.map((s) => ({
+      title: s.learn_name,
+      description: s.learn_text,
+    })) ?? [];
 
-  const tools = detailData?.acf?.tools_data || [];
-
-  // Show loading skeleton while data is being fetched
-  if (isLoading || !detailData || !courseInfo) {
-    return <LoadingSkeleton />;
-  }
+  const tools = detailData.acf?.tools_data ?? [];
 
   return (
     <section className={styles.container}>
-      {/* Header Section */}
+      {/* Header */}
       <div className={styles.headerSection}>
         <div className={styles.backButton} onClick={handleBackClick}>
           <Image
@@ -236,7 +211,7 @@ export default function AiProgramDetailsSection() {
         <div className={styles.headerContent}>
           <div className={styles.programImageContainer}>
             <img
-              src={courseInfo?.thumbnailLink}
+              src={courseInfo.thumbnailLink}
               alt={programTitle}
               className={styles.programImage}
             />
@@ -285,38 +260,37 @@ export default function AiProgramDetailsSection() {
         </div>
       </div>
 
-      {/* Prerequisites Section - FIXED */}
+      {/* Prerequisites */}
       {prerequisitesArray.length > 0 && (
         <div className={styles.section}>
           <div className={styles.sectionContent}>
             <h3 className={styles.sectionTitle}>Prerequisites</h3>
             <ul className={styles.bulletList}>
-              {prerequisitesArray.map((item, index) => (
-                <p key={index} className={styles.listItem}>
-                  {item.trim()}
-                </p>
+              {prerequisitesArray.map((item, i) => (
+                <li key={i} className={styles.listItem}>
+                  {item}
+                </li>
               ))}
             </ul>
           </div>
         </div>
       )}
 
-      {/* Modules Section - FIXED */}
+      {/* Modules */}
       {modules.length > 0 && (
         <div className={styles.section}>
           <div className={styles.sectionContent}>
             <h3 className={styles.sectionTitle}>Modules</h3>
             <ul className={styles.bulletList}>
-              {modules.map((item, index) => (
-                <p key={index} className={styles.listItem}>
-                  {item.certification_module_title}
-
-                  {item.certification_module_description && (
+              {modules.map((m, i) => (
+                <li key={i} className={styles.listItem}>
+                  {m.certification_module_title}
+                  {m.certification_module_description && (
                     <p className={styles.moduleDescription}>
-                      {item.certification_module_description}
+                      {m.certification_module_description}
                     </p>
                   )}
-                </p>
+                </li>
               ))}
             </ul>
           </div>
@@ -329,8 +303,8 @@ export default function AiProgramDetailsSection() {
           <div className={styles.sectionContent}>
             <h3 className={styles.sectionTitle}>Materials</h3>
             <div className={styles.materialsContainer}>
-              {materials.map((m, idx) => (
-                <p key={idx} className={styles.materialItem}>
+              {materials.map((m, i) => (
+                <p key={i} className={styles.materialItem}>
                   • {m.name}
                 </p>
               ))}
@@ -339,14 +313,14 @@ export default function AiProgramDetailsSection() {
         </div>
       )}
 
-      {/* What will you learn? Section */}
+      {/* Learning Outcomes */}
       {learningOutcomes.length > 0 && (
         <div className={styles.section}>
           <div className={styles.sectionContent}>
             <h2 className={styles.sectionTitle}>What Will You Learn?</h2>
             <div className={styles.learningGrid}>
-              {learningOutcomes.map((outcome, index) => (
-                <div key={index} className={styles.learningItem}>
+              {learningOutcomes.map((outcome, i) => (
+                <div key={i} className={styles.learningItem}>
                   <h3 className={styles.learningTitle}>{outcome.title}</h3>
                   <p className={styles.learningDescription}>
                     {outcome.description}
@@ -358,14 +332,14 @@ export default function AiProgramDetailsSection() {
         </div>
       )}
 
-      {/* Tools you'll master Section */}
+      {/* Tools */}
       {tools.length > 0 && (
         <div className={styles.section}>
           <div className={styles.sectionContent}>
             <h3 className={styles.sectionTitle}>Tools You&apos;ll Master</h3>
             <div className={styles.toolsContainer}>
-              {tools.map((tool, index) => (
-                <div key={index} className={styles.toolItem}>
+              {tools.map((tool, i) => (
+                <div key={i} className={styles.toolItem}>
                   <div className={styles.toolIconContainer}>
                     <img
                       src={tool.tool_image}
